@@ -1,0 +1,44 @@
+
+Public Sub ImportTextFilesToSheets()
+    Dim folderPath As String
+    Dim fileName As String
+    Dim currentWorkbook As Workbook
+    Dim newWorkbook As Workbook
+    Dim currentSheet As Worksheet
+    
+    ' Set the folder path where the text files are located
+    folderPath = "C:\ ... \" ' Update with your actual folder path
+    
+    ' Disable screen updating to speed up the process
+    Application.ScreenUpdating = False
+    
+    ' Create a new workbook to import the text files
+    Set newWorkbook = Workbooks.Add
+    
+    ' Loop through each file in the folder
+    fileName = Dir(folderPath & "*.txt")
+    Do While fileName <> ""
+        ' Open the text file
+        Set currentWorkbook = Workbooks.Open(folderPath & fileName)
+        
+        ' Copy the data from the text file
+        Set currentSheet = currentWorkbook.Sheets(1)
+        currentSheet.Copy After:=newWorkbook.Sheets(newWorkbook.Sheets.Count)
+        
+        ' Close the text file
+        currentWorkbook.Close SaveChanges:=False
+        
+        ' Move to the next file
+        fileName = Dir
+    Loop
+    
+    ' Save and close the new workbook
+    newWorkbook.SaveAs "C:\ ... \Output.xlsx" ' Update with your desired output file path and name
+    newWorkbook.Close SaveChanges:=False
+    
+    ' Enable screen updating
+    Application.ScreenUpdating = True
+    
+    ' Inform the user that the import is complete
+    MsgBox "Text files imported successfully!"
+End Sub
